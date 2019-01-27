@@ -116,15 +116,15 @@ class Enemy(pygame.sprite.Sprite):
         self.target = Globals.BALL_X
         self.move_conductor.play()
 
-        if self.rect.centerx > self.target:
+        if self.rect.centerx > self.target + self.max_speed:
             self.image = self.enemy_animations['walk_left']
             if self.rect.centerx - self.max_speed >= 30:
                 self.rect.centerx -= self.max_speed
-        elif self.rect.centerx < self.target:
+        elif self.rect.centerx < self.target - self.max_speed:
             self.image = self.enemy_animations['walk_right']
             if self.rect.centerx + self.max_speed <= Settings.WIDTH - 30:
                 self.rect.centerx += self.max_speed
-        if  self.target - 0.5 < self.rect.centerx < self.target + 0.5:
+        if self.target - 0.5 < self.rect.centerx < self.target + 0.5:
             self.image = self.enemy_animations['idle']
 
 
