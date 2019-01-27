@@ -10,7 +10,7 @@ SCREEN = pygame.display.set_mode((Settings.WIDTH, Settings.HEIGHT))
 clock = pygame.time.Clock()
 pygame.display.set_caption("Air hockey")
 
-all_sprites = pygame.sprite.Group()
+all_sprites = MyGroup()
 
 player = Player()
 enemy = Enemy()
@@ -20,19 +20,19 @@ ball = Ball()
 goal = Goal()
 enemy_goal = Enemy_Goal()
 
-player_group = pygame.sprite.Group()
+player_group = MyGroup()
 player_group.add(player)
 
-enemy_group = pygame.sprite.Group()
+enemy_group = MyGroup()
 enemy_group.add(enemy)
 
-ball_group = pygame.sprite.Group()
+ball_group = MyGroup()
 ball_group.add(ball)
 
-goal_group = pygame.sprite.Group()
+goal_group = MyGroup()
 goal_group.add(goal)
 
-enemy_goal_group = pygame.sprite.Group()
+enemy_goal_group = MyGroup()
 enemy_goal_group.add(enemy_goal)
 
 all_sprites.add(player)
