@@ -10,18 +10,29 @@ class Player(pygame.sprite.Sprite):
         # self.rect = self.rect.inflate(-15, -15)
         # self.rect.size = (50, 50)
         self.player_animations = {}
-        self.player_animations['idle'] = pyganim.PygAnimation('assets/sprites/lucca/idle.gif', 50)
-        self.player_animations['walk_down'] = pyganim.PygAnimation('assets/sprites/lucca/walk_down.gif', 50)
-        self.player_animations['walk_up'] = pyganim.PygAnimation('assets/sprites/lucca/walk_up.gif', 50)
-        self.player_animations['walk_left'] = pyganim.PygAnimation('assets/sprites/lucca/walk_left.gif', 50)
-        self.player_animations['walk_right'] = self.player_animations['walk_left'].getCopy()
-        self.player_animations['walk_right'].flip(True, False)
-        self.player_animations['walk_right'].makeTransformsPermanent()
-        self.move_conductor = pyganim.PygConductor(self.player_animations)
+        if Globals.player_char == 'lucca':
+            self.player_animations['idle'] = pyganim.PygAnimation('assets/sprites/lucca/idle.gif', 50)
+            self.player_animations['walk_down'] = pyganim.PygAnimation('assets/sprites/lucca/walk_down.gif', 50)
+            self.player_animations['walk_up'] = pyganim.PygAnimation('assets/sprites/lucca/walk_up.gif', 50)
+            self.player_animations['walk_left'] = pyganim.PygAnimation('assets/sprites/lucca/walk_left.gif', 50)
+            self.player_animations['walk_right'] = self.player_animations['walk_left'].getCopy()
+            self.player_animations['walk_right'].flip(True, False)
+            self.player_animations['walk_right'].makeTransformsPermanent()
+        if Globals.player_char == 'frog':
+            self.player_animations['idle'] = pyganim.PygAnimation('assets/sprites/frog/idle.gif', 50)
+            self.player_animations['walk_down'] = pyganim.PygAnimation('assets/sprites/frog/walk_down.gif', 50)
+            self.player_animations['walk_up'] = pyganim.PygAnimation('assets/sprites/frog/walk_up.gif', 50)
+            self.player_animations['walk_left'] = pyganim.PygAnimation('assets/sprites/frog/walk_left.gif', 50)
+            self.player_animations['walk_right'] = self.player_animations['walk_left'].getCopy()
+            self.player_animations['walk_right'].flip(True, False)
+            self.player_animations['walk_right'].makeTransformsPermanent()
 
         for key in self.player_animations.keys():
             self.player_animations[key].scale((58, 84))
             self.player_animations[key].makeTransformsPermanent()
+        self.move_conductor = pyganim.PygConductor(self.player_animations)
+
+
 
         self.image = self.player_animations['idle']
         self.rect = pygame.Rect((0, 0), (58, 84))
