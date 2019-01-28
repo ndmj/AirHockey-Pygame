@@ -10,7 +10,8 @@ SCREEN = pygame.display.set_mode((Settings.WIDTH, Settings.HEIGHT))
 clock = pygame.time.Clock()
 pygame.display.set_caption("Chrono Trigger!")
 ball_sound = pygame.mixer.Sound('assets/sounds/ball.wav')
-
+goal_sound = pygame.mixer.Sound('assets/sounds/goal.wav')
+enemy_goal_sound = pygame.mixer.Sound('assets/sounds/enemy_goal.wav')
 def intro():
     intro = True
     background = pygame.transform.scale(pygame.image.load('assets/sprites/grass.png'), (Settings.WIDTH, Settings.HEIGHT))
@@ -58,10 +59,58 @@ def intro():
         SCREEN.blit(txt_surf_2, txt_rect_2)
         pygame.display.update()
 
+def difficulty_screen():
+    intro = True
+    background = pygame.transform.scale(pygame.image.load('assets/sprites/grass.png'),
+                                        (Settings.WIDTH, Settings.HEIGHT))
+    pygame.mixer.music.load('assets/sounds/intro.mp3')
+    pygame.mixer.music.play(-1)
+    while intro:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_1:
+                    Settings.ENEMY_SPEED = 4
+                    intro = False
+                if event.key == pygame.K_2:
+                    Settings.ENEMY_SPEED = 7
+                    intro = False
+                if event.key == pygame.K_3:
+                    Settings.ENEMY_SPEED = 10
+                    Settings.PLAYER_SPEED = 9
+                    intro = False
+
+        SCREEN.blit(background, (0, 0))
+
+        large_txt = pygame.font.Font('assets/fonts/ChronoType.ttf', 48)
+        txt_surface = large_txt.render('Choose difficulty!', True, Colors.WHITE)
+        txt_rect = txt_surface.get_rect()
+        txt_rect.center = (Settings.WIDTH/2, Settings.HEIGHT/4)
+
+        txt_surf_1 = large_txt.render('1 - Easy', True, Colors.WHITE)
+        txt_rect_1 = txt_surf_1.get_rect()
+        txt_rect_1.center = (Settings.WIDTH/2, Settings.HEIGHT / 2 - 50)
+
+        txt_surf_2 = large_txt.render('2 - Normal', True, Colors.WHITE)
+        txt_rect_2 = txt_surf_2.get_rect()
+        txt_rect_2.center = (Settings.WIDTH/2, Settings.HEIGHT / 2)
+
+        txt_surf_3 = large_txt.render('3 - Hard', True, Colors.WHITE)
+        txt_rect_3 = txt_surf_3.get_rect()
+        txt_rect_3.center = (Settings.WIDTH/2, Settings.HEIGHT / 2 + 50)
+
+        SCREEN.blit(txt_surface, txt_rect)
+        SCREEN.blit(txt_surf_1, txt_rect_1)
+        SCREEN.blit(txt_surf_2, txt_rect_2)
+        SCREEN.blit(txt_surf_3, txt_rect_3)
+        pygame.display.update()
 
 def status_screen(msg):
     win_anim = None
     enememy_animation = None
+    screen = True
 
     if msg == 'win':
         pygame.mixer.music.load('assets/sounds/win.mp3')
@@ -71,6 +120,9 @@ def status_screen(msg):
         txt_surface = large_txt.render('You won!', True, Colors.BLACK)
         txt_rect = txt_surface.get_rect()
         txt_rect.center = (Settings.WIDTH / 2, Settings.HEIGHT / 4)
+        txt_surface_2 = large_txt.render('Press space to try again!', True, Colors.BLACK)
+        txt_rect_2 = txt_surface_2.get_rect()
+        txt_rect_2.center = (Settings.WIDTH / 2, Settings.HEIGHT - 100)
         if Globals.player_char == 'lucca':
             win_anim = pyganim.PygAnimation('assets/sprites/lucca/win.gif', 20)
         if Globals.player_char == 'frog':
@@ -85,22 +137,30 @@ def status_screen(msg):
         txt_surface = large_txt.render('You lost!', True, Colors.RED)
         txt_rect = txt_surface.get_rect()
         txt_rect.center = (Settings.WIDTH / 2, Settings.HEIGHT / 4)
+        txt_surface_2 = large_txt.render('Press space to try again!', True, Colors.RED)
+        txt_rect_2 = txt_surface_2.get_rect()
+        txt_rect_2.center = (Settings.WIDTH / 2, Settings.HEIGHT - 100)
         if Globals.player_char == 'lucca':
             win_anim = pyganim.PygAnimation('assets/sprites/lucca/lose.gif', 20)
         if Globals.player_char == 'frog':
             win_anim = pyganim.PygAnimation('assets/sprites/frog/lose.gif', 20)
         enememy_animation = pyganim.PygAnimation('assets/sprites/magus/win.gif')
 
-    win_anim.scale((58, 84))
+    if msg == 'win' and Globals.player_char == 'frog':
+        win_anim.scale((68, 94))
+    else:
+        win_anim.scale((58, 84))
+
     win_anim.makeTransformsPermanent()
     enememy_animation.scale((58, 84))
     enememy_animation.makeTransformsPermanent()
-    win_rect = pygame.Rect((Settings.WIDTH - 125, Settings.HEIGHT / 2), (58, 84))
+    win_rect = pygame.Rect((Settings.WIDTH - 125, Settings.HEIGHT / 2), (68, 94))
     lose_rect = pygame.Rect((Settings.WIDTH / 6, Settings.HEIGHT / 2), (58, 84))
     win_anim.play()
     enememy_animation.play()
 
-    while True:
+
+    while screen:
         if msg == 'win':
             SCREEN.fill(Colors.WHITE)
         if msg == 'lost':
@@ -109,7 +169,13 @@ def status_screen(msg):
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    intro()
+                    difficulty_screen()
+                    game_loop()
 
+        SCREEN.blit(txt_surface_2, txt_rect_2)
         SCREEN.blit(txt_surface, txt_rect)
         win_anim.blit(SCREEN, win_rect)
         enememy_animation.blit(SCREEN, lose_rect)
@@ -158,7 +224,7 @@ def game_loop():
     background = pygame.transform.scale(pygame.image.load('assets/sprites/grass.png'), (Settings.WIDTH, Settings.HEIGHT))
     sword = pygame.transform.scale(pygame.image.load('assets/sprites/sword.gif'), (25, 60))
 
-    start_ticks = 0
+    start_ticks = pygame.time.get_ticks()
     started = True
 
     def score_board(player_score, enemy_score, SCREEN):
@@ -194,7 +260,7 @@ def game_loop():
 
         hits = pygame.sprite.groupcollide(ball_group, goal_group, False, False)
         for hit in hits:
-
+            goal_sound.play()
             hit_by = 0
             ball.rect.centerx = Settings.WIDTH / 2
             ball.rect.centery = Settings.HEIGHT / 2
@@ -222,6 +288,7 @@ def game_loop():
 
         hits = pygame.sprite.groupcollide(ball_group, enemy_goal_group, False, False)
         for hit in hits:
+            enemy_goal_sound.play()
             hit_by = 0
             ball.rect.centerx = Settings.WIDTH / 2
             ball.rect.centery = Settings.HEIGHT / 2
@@ -368,4 +435,5 @@ def game_loop():
             started = False
 
 intro()
+difficulty_screen()
 game_loop()
