@@ -10,8 +10,6 @@ SCREEN = pygame.display.set_mode((Settings.WIDTH, Settings.HEIGHT))
 clock = pygame.time.Clock()
 pygame.display.set_caption("Air hockey")
 
-
-
 def intro():
     intro = True
     while intro:
@@ -124,9 +122,13 @@ def game_loop():
     enemy_score = 0
     hit_by = 0
 
+    torch = pyganim.PygAnimation('assets/sprites/torch.gif', 20)
+    torch.play()
+
     while True:  # mainloop
         clock.tick(Settings.FPS)
         SCREEN.fill(Colors.WHITE)
+        torch.blit(SCREEN, (200, 20))
 
         hits = pygame.sprite.groupcollide(ball_group, goal_group, False, False)
         for hit in hits:
