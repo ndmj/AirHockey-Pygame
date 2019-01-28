@@ -12,6 +12,7 @@ pygame.display.set_caption("Air hockey")
 
 def intro():
     intro = True
+    background = pygame.transform.scale(pygame.image.load('assets/grass.png'), (Settings.WIDTH, Settings.HEIGHT))
     while intro:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -25,10 +26,10 @@ def intro():
                     Globals.player_char = 'frog'
                     intro = False
 
-        SCREEN.fill(Colors.WHITE)
+        SCREEN.blit(background, (0, 0))
 
         large_txt = pygame.font.Font('freesansbold.ttf', 34)
-        txt_surface = large_txt.render('Choose your character', True, Colors.BLACK)
+        txt_surface = large_txt.render('Choose your character', True, Colors.WHITE)
         txt_rect = txt_surface.get_rect()
         txt_rect.center = ((Settings.WIDTH/2, Settings.HEIGHT/4))
 
