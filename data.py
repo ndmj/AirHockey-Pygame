@@ -16,6 +16,7 @@ class Settings():
     BALL_MAX_SPEED = 20
     BALL_SPEED = 6
     PLAYER_SPEED = 12
+    ENEMY_SPEED = 10
 
 
 class Globals():

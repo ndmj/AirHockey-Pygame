@@ -118,7 +118,7 @@ class Enemy(pygame.sprite.Sprite):
 
         self.rect.centerx = Settings.WIDTH / 2
         self.rect.top = 45
-        self.max_speed = 4
+        self.max_speed = Settings.ENEMY_SPEED
 
     def update(self):
         self.hidden = False
@@ -171,11 +171,11 @@ class Ball(pygame.sprite.Sprite):
 class Goal(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.transform.scale(pygame.image.load('assets/goal_t.png'), (192, 18))
+        self.image = pygame.transform.scale(pygame.image.load('assets/sprites/goal_t.png'), (192, 18))
         self.rect = self.image.get_rect()
-        self.rect = self.rect.inflate(-30, -8)
-        self.rect.centerx = Settings.WIDTH / 2
-        self.rect.top = -7
+        self.rect = self.rect.inflate(-40, -8)
+        self.rect.centerx = Settings.WIDTH / 2 - 5
+        self.rect.top = -5
 
     def update(self):
         self.hidden = False
@@ -183,11 +183,11 @@ class Goal(pygame.sprite.Sprite):
 class Enemy_Goal(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.transform.scale(pygame.image.load('assets/goal2_t.png'), (192, 18))
+        self.image = pygame.transform.scale(pygame.image.load('assets/sprites/goal2_t.png'), (192, 18))
         self.rect = self.image.get_rect()
-        self.rect = self.rect.inflate(-30, -8)
-        self.rect.centerx = Settings.WIDTH / 2
-        self.rect.bottom = Settings.HEIGHT + 7
+        self.rect = self.rect.inflate(-40, -8)
+        self.rect.centerx = Settings.WIDTH / 2 - 5
+        self.rect.bottom = Settings.HEIGHT + 5
 
     def update(self):
         self.hidden = False

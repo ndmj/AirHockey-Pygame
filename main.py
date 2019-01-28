@@ -5,17 +5,16 @@ from data import Colors, Settings, Lucca, Globals
 from classes import *
 
 pygame.init()
-pygame.mixer.init()
 
 SCREEN = pygame.display.set_mode((Settings.WIDTH, Settings.HEIGHT))
 clock = pygame.time.Clock()
-pygame.display.set_caption("Air hockey")
-ball_sound = pygame.mixer.Sound('assets/ball.wav')
+pygame.display.set_caption("Chrono Trigger!")
+ball_sound = pygame.mixer.Sound('assets/sounds/ball.wav')
 
 def intro():
     intro = True
-    background = pygame.transform.scale(pygame.image.load('assets/grass.png'), (Settings.WIDTH, Settings.HEIGHT))
-    pygame.mixer.music.load('assets/intro.mp3')
+    background = pygame.transform.scale(pygame.image.load('assets/sprites/grass.png'), (Settings.WIDTH, Settings.HEIGHT))
+    pygame.mixer.music.load('assets/sounds/intro.mp3')
     pygame.mixer.music.play(-1)
     while intro:
         for event in pygame.event.get():
@@ -32,8 +31,8 @@ def intro():
 
         SCREEN.blit(background, (0, 0))
 
-        large_txt = pygame.font.Font('freesansbold.ttf', 34)
-        txt_surface = large_txt.render('Choose your character', True, Colors.WHITE)
+        large_txt = pygame.font.Font('assets/fonts/ChronoType.ttf', 48)
+        txt_surface = large_txt.render('Choose your character!', True, Colors.WHITE)
         txt_rect = txt_surface.get_rect()
         txt_rect.center = (Settings.WIDTH/2, Settings.HEIGHT/4)
 
@@ -65,10 +64,10 @@ def status_screen(msg):
     enememy_animation = None
 
     if msg == 'win':
-        pygame.mixer.music.load('assets/win.mp3')
+        pygame.mixer.music.load('assets/sounds/win.mp3')
         pygame.mixer.music.play(-1)
         SCREEN.fill(Colors.WHITE)
-        large_txt = pygame.font.Font('freesansbold.ttf', 34)
+        large_txt = pygame.font.Font('assets/fonts/ChronoType.ttf', 34)
         txt_surface = large_txt.render('You won!', True, Colors.BLACK)
         txt_rect = txt_surface.get_rect()
         txt_rect.center = (Settings.WIDTH / 2, Settings.HEIGHT / 4)
@@ -79,10 +78,10 @@ def status_screen(msg):
         enememy_animation = pyganim.PygAnimation('assets/sprites/magus/lose.gif')
 
     if msg == 'lost':
-        pygame.mixer.music.load('assets/lose.mp3')
+        pygame.mixer.music.load('assets/sounds/lose.mp3')
         pygame.mixer.music.play(-1)
         SCREEN.fill(Colors.BLACK)
-        large_txt = pygame.font.Font('freesansbold.ttf', 34)
+        large_txt = pygame.font.Font('assets/fonts/ChronoType.ttf', 34)
         txt_surface = large_txt.render('You lost!', True, Colors.RED)
         txt_rect = txt_surface.get_rect()
         txt_rect.center = (Settings.WIDTH / 2, Settings.HEIGHT / 4)
@@ -118,7 +117,7 @@ def status_screen(msg):
 
 
 def game_loop():
-    pygame.mixer.music.load('assets/game.mp3')
+    pygame.mixer.music.load('assets/sounds/game.mp3')
     pygame.mixer.music.play(-1)
     all_sprites = MyGroup()
 
@@ -156,19 +155,28 @@ def game_loop():
     enemy_score = 0
     hit_by = 0
 
-    background = pygame.transform.scale(pygame.image.load('assets/grass.png'), (Settings.WIDTH, Settings.HEIGHT))
+    background = pygame.transform.scale(pygame.image.load('assets/sprites/grass.png'), (Settings.WIDTH, Settings.HEIGHT))
     sword = pygame.transform.scale(pygame.image.load('assets/sprites/sword.gif'), (25, 60))
 
     start_ticks = 0
     started = True
 
+    def score_board(player_score, enemy_score, SCREEN):
+        font = pygame.font.Font('assets/fonts/ChronoType.ttf', 36)
+        scoreboard = font.render(str(player_score) + ' : ' + str(enemy_score), True, Colors.WHITE)
+        rectangle = scoreboard.get_rect()
+        rectangle.center = (60, Settings.HEIGHT - 20)
+
+        SCREEN.blit(scoreboard, rectangle)
+
     while True:  # mainloop
         clock.tick(Settings.FPS)
         SCREEN.blit(background, (0, 0))
-        SCREEN.blit(sword, (Settings.WIDTH / 2 - 96, 5))
-        SCREEN.blit(sword, (Settings.WIDTH / 2 + 96, 5))
-        SCREEN.blit(sword, (Settings.WIDTH / 2 - 96, Settings.HEIGHT - 65))
-        SCREEN.blit(sword, (Settings.WIDTH / 2 + 96, Settings.HEIGHT - 65))
+        SCREEN.blit(sword, (Settings.WIDTH / 2 - 106, 5))
+        SCREEN.blit(sword, (Settings.WIDTH / 2 + 86, 5))
+        SCREEN.blit(sword, (Settings.WIDTH / 2 - 106, Settings.HEIGHT - 65))
+        SCREEN.blit(sword, (Settings.WIDTH / 2 + 86, Settings.HEIGHT - 65))
+        score_board(player_score, enemy_score, SCREEN)
 
         if pygame.time.get_ticks() > start_ticks + 20000:
             print('Should get another ball..')
