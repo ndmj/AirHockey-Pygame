@@ -28,7 +28,7 @@ def intro():
         SCREEN.fill(Colors.WHITE)
 
         large_txt = pygame.font.Font('freesansbold.ttf', 34)
-        txt_surface = large_txt.render('Press space to continue..', True, Colors.BLACK)
+        txt_surface = large_txt.render('Choose your character', True, Colors.BLACK)
         txt_rect = txt_surface.get_rect()
         txt_rect.center = ((Settings.WIDTH/2, Settings.HEIGHT/4))
 
@@ -56,6 +56,7 @@ def status_screen(msg):
             win_anim = pyganim.PygAnimation('assets/sprites/lucca/win.gif', 20)
         if Globals.player_char == 'frog':
             win_anim = pyganim.PygAnimation('assets/sprites/frog/win.gif')
+        enememy_animation = pyganim.PygAnimation('assets/sprites/magus/lose.gif')
 
     if msg == 'lost':
         SCREEN.fill(Colors.BLACK)
@@ -67,11 +68,15 @@ def status_screen(msg):
             win_anim = pyganim.PygAnimation('assets/sprites/lucca/lose.gif', 20)
         if Globals.player_char == 'frog':
             win_anim = pyganim.PygAnimation('assets/sprites/frog/lose.gif', 20)
-
+        enememy_animation = pyganim.PygAnimation('assets/sprites/magus/win.gif')
     win_anim.scale((58, 84))
     win_anim.makeTransformsPermanent()
+    enememy_animation.scale((58, 84))
+    enememy_animation.makeTransformsPermanent()
     win_rect = pygame.Rect((Settings.WIDTH / 2, Settings.HEIGHT / 2), (58, 84))
+    lose_rect = pygame.Rect((Settings.WIDTH / 6, Settings.HEIGHT / 2), (58, 84))
     win_anim.play()
+    enememy_animation.play()
     while True:
         if msg == 'win':
             SCREEN.fill(Colors.WHITE)
@@ -84,6 +89,7 @@ def status_screen(msg):
 
         SCREEN.blit(txt_surface, txt_rect)
         win_anim.blit(SCREEN, win_rect)
+        enememy_animation.blit(SCREEN, lose_rect)
         pygame.display.update()
 
 
