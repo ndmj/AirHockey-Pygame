@@ -140,9 +140,6 @@ class Enemy(pygame.sprite.Sprite):
 class Ball(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        # self.image = pygame.transform.scale(pygame.image.load('assets/ball.png'), (25, 25))
-        # self.rect = self.image.get_rect()
-        # self.rect = self.rect.inflate(-6, -6)
         anim_ball = pyganim.PygAnimation('assets/sprites/ball.gif', 50)
         move_conductor = pyganim.PygConductor(anim_ball)
         move_conductor.play()
@@ -162,7 +159,7 @@ class Ball(pygame.sprite.Sprite):
         if self.rect.x >= Settings.WIDTH - Settings.PADDING - self.rect.width or self.rect.x <= 0 + Settings.PADDING:
             self.speed[0] *= -1
             self.rect.x = self.rect.x + self.speed[0] * 2
-        if self.rect.y >= Settings.HEIGHT + 5 - self.rect.height or self.rect.y <= -5:
+        if self.rect.y >= Settings.HEIGHT - self.rect.height + 15 or self.rect.y <= -15:
             self.speed[1] *= -1
             self.rect.y = self.rect.y + self.speed[1] * 2
 
@@ -171,11 +168,11 @@ class Ball(pygame.sprite.Sprite):
 class Goal(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.transform.scale(pygame.image.load('assets/sprites/goal_t.png'), (192, 18))
+        self.image = pygame.transform.scale(pygame.image.load('assets/sprites/goal_t.png'), (192, 32))
         self.rect = self.image.get_rect()
         self.rect = self.rect.inflate(-40, -8)
         self.rect.centerx = Settings.WIDTH / 2 - 5
-        self.rect.top = -5
+        self.rect.top = -10
 
     def update(self):
         self.hidden = False
@@ -183,11 +180,11 @@ class Goal(pygame.sprite.Sprite):
 class Enemy_Goal(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.transform.scale(pygame.image.load('assets/sprites/goal2_t.png'), (192, 18))
+        self.image = pygame.transform.scale(pygame.image.load('assets/sprites/goal2_t.png'), (192, 32))
         self.rect = self.image.get_rect()
         self.rect = self.rect.inflate(-40, -8)
         self.rect.centerx = Settings.WIDTH / 2 - 5
-        self.rect.bottom = Settings.HEIGHT + 5
+        self.rect.bottom = Settings.HEIGHT + 10
 
     def update(self):
         self.hidden = False
@@ -201,7 +198,6 @@ class MyGroup(pygame.sprite.Group):
         sprites = self.sprites()
         surface_blit = surface.blit
         for spr in sprites:
-            # Mine remove later!!!!!
             if isinstance(spr.image, pyganim.PygAnimation):
                 self.spritedict[spr] = spr.image.blit(surface, spr.rect)
             else:
