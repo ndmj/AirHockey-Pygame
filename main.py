@@ -31,28 +31,41 @@ def intro():
         large_txt = pygame.font.Font('freesansbold.ttf', 34)
         txt_surface = large_txt.render('Choose your character', True, Colors.WHITE)
         txt_rect = txt_surface.get_rect()
-        txt_rect.center = ((Settings.WIDTH/2, Settings.HEIGHT/4))
+        txt_rect.center = (Settings.WIDTH/2, Settings.HEIGHT/4)
 
         lucca_img = pygame.image.load('assets/sprites/lucca/icon.gif')
         lucca_rect = lucca_img.get_rect()
-        lucca_rect.center = ((Settings.WIDTH/8, Settings.HEIGHT/2))
+        lucca_rect.center = (120, Settings.HEIGHT / 2)
         frog_img = pygame.image.load('assets/sprites/frog/icon.gif')
         frog_rect = frog_img.get_rect()
-        frog_rect.center = ((Settings.WIDTH - 60, Settings.HEIGHT / 2))
+        frog_rect.center = (Settings.WIDTH - 120, Settings.HEIGHT / 2)
+
+        txt_surf_1 = large_txt.render('1', True, Colors.WHITE)
+        txt_rect_1 = txt_surf_1.get_rect()
+        txt_rect_1.center = (120, Settings.HEIGHT / 2 + 100)
+
+        txt_surf_2 = large_txt.render('2', True, Colors.WHITE)
+        txt_rect_2 = txt_surf_2.get_rect()
+        txt_rect_2.center = (Settings.WIDTH - 120, Settings.HEIGHT / 2 + 100)
 
         SCREEN.blit(lucca_img, lucca_rect)
         SCREEN.blit(frog_img, frog_rect)
         SCREEN.blit(txt_surface, txt_rect)
+        SCREEN.blit(txt_surf_1, txt_rect_1)
+        SCREEN.blit(txt_surf_2, txt_rect_2)
         pygame.display.update()
 
 
 def status_screen(msg):
+    win_anim = None
+    enememy_animation = None
+
     if msg == 'win':
         SCREEN.fill(Colors.WHITE)
         large_txt = pygame.font.Font('freesansbold.ttf', 34)
         txt_surface = large_txt.render('You won!', True, Colors.BLACK)
         txt_rect = txt_surface.get_rect()
-        txt_rect.center = ((Settings.WIDTH / 2, Settings.HEIGHT / 4))
+        txt_rect.center = (Settings.WIDTH / 2, Settings.HEIGHT / 4)
         if Globals.player_char == 'lucca':
             win_anim = pyganim.PygAnimation('assets/sprites/lucca/win.gif', 20)
         if Globals.player_char == 'frog':
@@ -64,12 +77,13 @@ def status_screen(msg):
         large_txt = pygame.font.Font('freesansbold.ttf', 34)
         txt_surface = large_txt.render('You lost!', True, Colors.RED)
         txt_rect = txt_surface.get_rect()
-        txt_rect.center = ((Settings.WIDTH / 2, Settings.HEIGHT / 4))
+        txt_rect.center = (Settings.WIDTH / 2, Settings.HEIGHT / 4)
         if Globals.player_char == 'lucca':
             win_anim = pyganim.PygAnimation('assets/sprites/lucca/lose.gif', 20)
         if Globals.player_char == 'frog':
             win_anim = pyganim.PygAnimation('assets/sprites/frog/lose.gif', 20)
         enememy_animation = pyganim.PygAnimation('assets/sprites/magus/win.gif')
+
     win_anim.scale((58, 84))
     win_anim.makeTransformsPermanent()
     enememy_animation.scale((58, 84))
@@ -78,6 +92,7 @@ def status_screen(msg):
     lose_rect = pygame.Rect((Settings.WIDTH / 6, Settings.HEIGHT / 2), (58, 84))
     win_anim.play()
     enememy_animation.play()
+
     while True:
         if msg == 'win':
             SCREEN.fill(Colors.WHITE)
@@ -135,6 +150,7 @@ def game_loop():
     sword = pygame.transform.scale(pygame.image.load('assets/sprites/sword.gif'), (25, 60))
 
     start_ticks = 0
+    started = True
 
     while True:  # mainloop
         clock.tick(Settings.FPS)
@@ -307,9 +323,14 @@ def game_loop():
             player.rect.centerx = Settings.WIDTH / 2
             enemy.rect.centerx = Settings.WIDTH / 2
 
-            print('Ball got stuck')
+            print('Ball got stuck...')
 
             pygame.time.wait(1500)
+            start_ticks = pygame.time.get_ticks()
+            if two_balls:
+                ball_group.remove(ball2)
+                all_sprites.remove(ball2)
+                two_balls = False
 
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -322,6 +343,11 @@ def game_loop():
         all_sprites.update()
         all_sprites.draw(SCREEN)
         pygame.display.update()
+
+        if started:
+            print('The game is about to start!')
+            pygame.time.wait(3000)
+            started = False
 
 intro()
 game_loop()

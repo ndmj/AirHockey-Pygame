@@ -175,7 +175,7 @@ class Goal(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect = self.rect.inflate(-30, -8)
         self.rect.centerx = Settings.WIDTH / 2
-        self.rect.top = -8
+        self.rect.top = -7
 
     def update(self):
         self.hidden = False
@@ -187,7 +187,7 @@ class Enemy_Goal(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect = self.rect.inflate(-30, -8)
         self.rect.centerx = Settings.WIDTH / 2
-        self.rect.bottom = Settings.HEIGHT + 8
+        self.rect.bottom = Settings.HEIGHT + 7
 
     def update(self):
         self.hidden = False
