@@ -83,7 +83,7 @@ def status_screen(msg):
                 quit()
 
         SCREEN.blit(txt_surface, txt_rect)
-        win_anim.blit(SCREEN,win_rect)
+        win_anim.blit(SCREEN, win_rect)
         pygame.display.update()
 
 
@@ -94,6 +94,8 @@ def game_loop():
     enemy = Enemy()
 
     ball = Ball()
+    ball2 = Ball()
+    two_balls = False
 
     goal = Goal()
     enemy_goal = Enemy_Goal()
@@ -122,57 +124,79 @@ def game_loop():
     enemy_score = 0
     hit_by = 0
 
-    torch = pyganim.PygAnimation('assets/sprites/torch.gif', 20)
-    torch.play()
+    background = pygame.transform.scale(pygame.image.load('assets/grass.png'), (Settings.WIDTH, Settings.HEIGHT))
+    sword = pygame.transform.scale(pygame.image.load('assets/sprites/sword.gif'), (25, 60))
+
+    start_ticks = 0
 
     while True:  # mainloop
         clock.tick(Settings.FPS)
-        SCREEN.fill(Colors.WHITE)
-        torch.blit(SCREEN, (200, 20))
+        SCREEN.blit(background, (0, 0))
+        SCREEN.blit(sword, (Settings.WIDTH / 2 - 96, 5))
+        SCREEN.blit(sword, (Settings.WIDTH / 2 + 96, 5))
+        SCREEN.blit(sword, (Settings.WIDTH / 2 - 96, Settings.HEIGHT - 65))
+        SCREEN.blit(sword, (Settings.WIDTH / 2 + 96, Settings.HEIGHT - 65))
+
+        if pygame.time.get_ticks() > start_ticks + 20000:
+            print('Should get another ball..')
+            two_balls = True
+            ball_group.add(ball2)
+            all_sprites.add(ball2)
+            start_ticks = pygame.time.get_ticks()
 
         hits = pygame.sprite.groupcollide(ball_group, goal_group, False, False)
         for hit in hits:
 
             hit_by = 0
-            hit.rect.centerx = Settings.WIDTH / 2
-            hit.rect.centery = Settings.HEIGHT / 2
+            ball.rect.centerx = Settings.WIDTH / 2
+            ball.rect.centery = Settings.HEIGHT / 2
 
             Settings.BALL_SPEED = Settings.BALL_STARTING_SPEED
 
-            hit.speed[0] = 0
-            hit.speed[1] = Settings.BALL_SPEED
+            ball.speed[0] = 0
+            ball.speed[1] = Settings.BALL_SPEED
 
             player_score += 1
             print('Score: ' + str(player_score) + " - " + str(enemy_score))
-            if player_score == 1:
+            if player_score == 5:
                 status_screen('win')
 
             player.rect.centerx = Settings.WIDTH / 2
             enemy.rect.centerx = Settings.WIDTH / 2
 
             pygame.time.wait(2000)
+            start_ticks = pygame.time.get_ticks()
+            if two_balls:
+                ball_group.remove(ball2)
+                all_sprites.remove(ball2)
+                two_balls = False
+
 
         hits = pygame.sprite.groupcollide(ball_group, enemy_goal_group, False, False)
         for hit in hits:
             hit_by = 0
-            hit.rect.centerx = Settings.WIDTH / 2
-            hit.rect.centery = Settings.HEIGHT / 2
+            ball.rect.centerx = Settings.WIDTH / 2
+            ball.rect.centery = Settings.HEIGHT / 2
 
             Settings.BALL_SPEED = Settings.BALL_STARTING_SPEED
 
-            hit.speed[0] = 0
-            hit.speed[1] = Settings.BALL_SPEED
+            ball.speed[0] = 0
+            ball.speed[1] = Settings.BALL_SPEED
 
             enemy_score += 1
             print('Score: ' + str(player_score) + " - " + str(enemy_score))
-            if player_score == 5:
+            if enemy_score == 5:
                 status_screen('lost')
 
             player.rect.centerx = Settings.WIDTH / 2
             enemy.rect.centerx = Settings.WIDTH / 2
 
             pygame.time.wait(2000)
-
+            start_ticks = pygame.time.get_ticks()
+            if two_balls:
+                ball_group.remove(ball2)
+                all_sprites.remove(ball2)
+                two_balls = False
 
         hits = pygame.sprite.groupcollide(ball_group, player_group, False, False)
         for hit in hits:
