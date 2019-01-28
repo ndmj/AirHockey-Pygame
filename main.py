@@ -1,6 +1,6 @@
 import pygame, sys, random, math
 from pygame.locals import *
-
+import pyganim
 from data import Colors, Settings, Lucca, Globals
 from classes import *
 
@@ -45,6 +45,49 @@ def intro():
         SCREEN.blit(frog_img, frog_rect)
         SCREEN.blit(txt_surface, txt_rect)
         pygame.display.update()
+
+
+def status_screen(msg):
+    if msg == 'win':
+        SCREEN.fill(Colors.WHITE)
+        large_txt = pygame.font.Font('freesansbold.ttf', 34)
+        txt_surface = large_txt.render('You won!', True, Colors.BLACK)
+        txt_rect = txt_surface.get_rect()
+        txt_rect.center = ((Settings.WIDTH / 2, Settings.HEIGHT / 4))
+        if Globals.player_char == 'lucca':
+            win_anim = pyganim.PygAnimation('assets/sprites/lucca/win.gif', 20)
+        if Globals.player_char == 'frog':
+            win_anim = pyganim.PygAnimation('assets/sprites/frog/win.gif')
+
+    if msg == 'lost':
+        SCREEN.fill(Colors.BLACK)
+        large_txt = pygame.font.Font('freesansbold.ttf', 34)
+        txt_surface = large_txt.render('You lost!', True, Colors.RED)
+        txt_rect = txt_surface.get_rect()
+        txt_rect.center = ((Settings.WIDTH / 2, Settings.HEIGHT / 4))
+        if Globals.player_char == 'lucca':
+            win_anim = pyganim.PygAnimation('assets/sprites/lucca/lose.gif', 20)
+        if Globals.player_char == 'frog':
+            win_anim = pyganim.PygAnimation('assets/sprites/frog/lose.gif', 20)
+
+    win_anim.scale((58, 84))
+    win_anim.makeTransformsPermanent()
+    win_rect = pygame.Rect((Settings.WIDTH / 2, Settings.HEIGHT / 2), (58, 84))
+    win_anim.play()
+    while True:
+        if msg == 'win':
+            SCREEN.fill(Colors.WHITE)
+        if msg == 'lost':
+            SCREEN.fill(Colors.BLACK)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+        SCREEN.blit(txt_surface, txt_rect)
+        win_anim.blit(SCREEN,win_rect)
+        pygame.display.update()
+
 
 def game_loop():
     all_sprites = MyGroup()
@@ -99,6 +142,8 @@ def game_loop():
 
             player_score += 1
             print('Score: ' + str(player_score) + " - " + str(enemy_score))
+            if player_score == 1:
+                status_screen('win')
 
             player.rect.centerx = Settings.WIDTH / 2
             enemy.rect.centerx = Settings.WIDTH / 2
@@ -118,6 +163,8 @@ def game_loop():
 
             enemy_score += 1
             print('Score: ' + str(player_score) + " - " + str(enemy_score))
+            if player_score == 5:
+                status_screen('lost')
 
             player.rect.centerx = Settings.WIDTH / 2
             enemy.rect.centerx = Settings.WIDTH / 2

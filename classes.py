@@ -32,8 +32,6 @@ class Player(pygame.sprite.Sprite):
             self.player_animations[key].makeTransformsPermanent()
         self.move_conductor = pyganim.PygConductor(self.player_animations)
 
-
-
         self.image = self.player_animations['idle']
         self.rect = pygame.Rect((0, 0), (58, 84))
         self.rect.centerx = Settings.WIDTH / 2
