@@ -5,6 +5,7 @@ from data import Colors, Settings, Lucca, Globals
 from classes import *
 
 pygame.init()
+pygame.mixer.init()
 
 SCREEN = pygame.display.set_mode((Settings.WIDTH, Settings.HEIGHT))
 clock = pygame.time.Clock()
@@ -13,6 +14,8 @@ pygame.display.set_caption("Air hockey")
 def intro():
     intro = True
     background = pygame.transform.scale(pygame.image.load('assets/grass.png'), (Settings.WIDTH, Settings.HEIGHT))
+    pygame.mixer.music.load('assets/intro.mp3')
+    pygame.mixer.music.play(-1)
     while intro:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -61,6 +64,8 @@ def status_screen(msg):
     enememy_animation = None
 
     if msg == 'win':
+        pygame.mixer.music.load('assets/win.mp3')
+        pygame.mixer.music.play(-1)
         SCREEN.fill(Colors.WHITE)
         large_txt = pygame.font.Font('freesansbold.ttf', 34)
         txt_surface = large_txt.render('You won!', True, Colors.BLACK)
@@ -73,6 +78,8 @@ def status_screen(msg):
         enememy_animation = pyganim.PygAnimation('assets/sprites/magus/lose.gif')
 
     if msg == 'lost':
+        pygame.mixer.music.load('assets/lose.mp3')
+        pygame.mixer.music.play(-1)
         SCREEN.fill(Colors.BLACK)
         large_txt = pygame.font.Font('freesansbold.ttf', 34)
         txt_surface = large_txt.render('You lost!', True, Colors.RED)
@@ -88,7 +95,7 @@ def status_screen(msg):
     win_anim.makeTransformsPermanent()
     enememy_animation.scale((58, 84))
     enememy_animation.makeTransformsPermanent()
-    win_rect = pygame.Rect((Settings.WIDTH / 2, Settings.HEIGHT / 2), (58, 84))
+    win_rect = pygame.Rect((Settings.WIDTH - 125, Settings.HEIGHT / 2), (58, 84))
     lose_rect = pygame.Rect((Settings.WIDTH / 6, Settings.HEIGHT / 2), (58, 84))
     win_anim.play()
     enememy_animation.play()
@@ -110,6 +117,8 @@ def status_screen(msg):
 
 
 def game_loop():
+    pygame.mixer.music.load('assets/game.mp3')
+    pygame.mixer.music.play(-1)
     all_sprites = MyGroup()
 
     player = Player()
