@@ -167,6 +167,13 @@ def game_loop():
             pygame.time.wait(2000)
             start_ticks = pygame.time.get_ticks()
             if two_balls:
+                ball2.rect.centerx = Settings.WIDTH / 2
+                ball2.rect.centery = Settings.HEIGHT / 2
+                ball2.speed[0] = 0
+                if random.random() < 0.5:
+                    ball2.speed[1] = Settings.BALL_STARTING_SPEED
+                else:
+                    ball2.speed[1] = -Settings.BALL_STARTING_SPEED
                 ball_group.remove(ball2)
                 all_sprites.remove(ball2)
                 two_balls = False
