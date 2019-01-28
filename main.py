@@ -10,6 +10,7 @@ pygame.mixer.init()
 SCREEN = pygame.display.set_mode((Settings.WIDTH, Settings.HEIGHT))
 clock = pygame.time.Clock()
 pygame.display.set_caption("Air hockey")
+ball_sound = pygame.mixer.Sound('assets/ball.wav')
 
 def intro():
     intro = True
@@ -241,7 +242,7 @@ def game_loop():
         for hit in hits:
             if hit_by < 0:
                 hit_by = 0
-
+            ball_sound.play()
             hit_by += 1
             player_rect = player.rect.centerx, player.rect.centery
 
@@ -284,7 +285,7 @@ def game_loop():
                 hit_by = 0
 
             hit_by -= 1
-
+            ball_sound.play()
             player_rect = enemy.rect.centerx, enemy.rect.centery
 
             angle = math.degrees(math.atan2(abs(hit.rect.centery - player_rect[1]), abs(hit.rect.centerx - player_rect[0])))
